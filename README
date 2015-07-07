@@ -1,1 +1,18 @@
 A simple Babel transform implementation for Browserify's Nodejs API.
+
+Usage example:
+
+var browserify = require("browserify"),
+    Transformer = require("transformer")
+	fs = require("fs");
+
+function writer(path) {
+    return fs.createWriteStream(path, { encoding: "utf-8" });
+};
+
+var b = browserify();
+b.add("input_file_path");
+b.transform(function() {
+	return new Transformer({ encoding: "utf-8", decodeStrings: false });
+});
+b.bundle().pipe(writer("output_file_path"));
