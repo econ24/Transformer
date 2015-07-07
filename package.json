@@ -1,0 +1,16 @@
+{
+    "name": "Transformer",
+    "version": "0.1.0",
+    "private": true,
+    "description": "a simple Babel transform implementation for Browserify's Nodejs API",
+    "keywords": ["babel", "transform", "browserify"],
+    "dependencies": {
+        "babel-core": "^5.6.15"
+    },
+    "author": "Eric Conklin",
+    "main": "Transformer.js",
+    "repository": {
+        "type" : "git",
+        "url" : "https://github.com/econ24/Transformer.git"
+    }
+}
