@@ -1,6 +1,6 @@
 A simple Babel transform implementation for Browserify's Nodejs API.
 
-Usage example:
+Browserify usage example:
 
 var browserify = require("browserify"),
     Transformer = require("transformer")
@@ -10,9 +10,36 @@ function writer(path) {
     return fs.createWriteStream(path, { encoding: "utf-8" });
 };
 
-var b = browserify();
-b.add("input_file_path");
-b.transform(function() {
-	return new Transformer({ encoding: "utf-8", decodeStrings: false });
-});
-b.bundle().pipe(writer("output_file_path"));
+browserify()
+    .add("input_file_path")
+    .transform(function() {
+    	return new Transformer({ encoding: "utf-8", decodeStrings: false });
+    })
+    .bundle().pipe(writer("output_file_path"));
+
+Additionally, can be used as a transform stream,
+    e.g. for converting .jsx to .js:
+
+function writer(path) {
+    return fs.createWriteStream(path, { encoding: "utf-8" });
+};
+function reader(path) {
+    return fs.createReadStream(path, { encoding: "utf-8" })
+};
+
+var regex = /(\w+\.react\.)jsx$/;
+
+fs.readdir(input_directory, function(error, files) {
+    if(error) {
+        console.log("OOPS!!!");
+        return;
+    }
+    files.filter(function(file) { return regex.test(file); })
+        .forEach(function(file) {
+            reader(input_directory + "/" +file)
+                .pipe(Transformer({ encoding: "utf-8", decodeStrings: false }))
+                .pipe(writer(output_directory+"/"+regex.exec(file)[1]+"js"));
+        })
+})
+
+Now you have *.react.js files ready to be pre-rendered on the server!
